@@ -47,7 +47,7 @@ var items = {
     "ceasar salad": {price: 4.2, type: "PreparedFood"},
 };
 
-var itemTypes =
+var itemTypeTaxModifiers =
 {
     "Groceries": {
         "Alabama" : 0,
@@ -82,9 +82,13 @@ function base(state) {
     return taxes[state];
 }
 
-function calc(state, itemType) {
+function calcTax(state, itemType) {
 
-    var itemTypeTaxModifier = itemTypes[itemType];
+    var itemTypeTaxModifier = itemTypeTaxModifiers[itemType];
+    if (itemTypeTaxModifier === undefined) {
+        return base(state);
+    }
+
     if (itemTypeTaxModifier[state] === "") {
         return 0;
     }
@@ -107,12 +111,8 @@ class TaxCalculator {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
             var result = null;
-            if (items[itemCode].type === "PreparedFood") {
-                result = ( 1 + base(this.state) ) * items[itemCode].price;
-            }
-            else {
-                result = calc(this.state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
-            }
+            result = calcTax(this.state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+
             console.log(`${itemCode}: $${result.toFixed(2)}`);
         }
         this._result = result;
