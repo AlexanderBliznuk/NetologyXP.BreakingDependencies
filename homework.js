@@ -48,26 +48,26 @@ var items = {
 };
 
 var itemTypes =
-    {
-        "Groceries": {
-            "Alabama" : 0,
-            "Alaska" : 0,
-            "Arizona" : "",
-            "Arkansas" : 0.015,
-            "California" : "",
-            "Colorado" : "",
-            "Connecticut" : ""
-        },
-        "PrescriptionDrug": {
-            "Alabama" : "",
-            "Alaska" : 0,
-            "Arizona" : "",
-            "Arkansas" : "",
-            "California" : "",
-            "Colorado" : "",
-            "Connecticut" : ""
-        }
-    };
+{
+    "Groceries": {
+        "Alabama" : 0,
+        "Alaska" : 0,
+        "Arizona" : "",
+        "Arkansas" : 0.015,
+        "California" : "",
+        "Colorado" : "",
+        "Connecticut" : ""
+    },
+    "PrescriptionDrug": {
+        "Alabama" : "",
+        "Alaska" : 0,
+        "Arizona" : "",
+        "Arkansas" : "",
+        "California" : "",
+        "Colorado" : "",
+        "Connecticut" : ""
+    }
+};
 
 function base(state) {
     var taxes = {
@@ -92,14 +92,22 @@ function calc(state, itemType) {
 }
 
 class TaxCalculator {
+    constructor(state, items) {
+        if (state && items && items instanceof Array) {
+            this._state = state;
+            this._items = items;
+        } else {
+            this._setRandomOrders();
+        }
+    }
+
     // У этой функции нелья менять интерфейс
     // Но можно менять содержимое
     calculateTax() {
-        var ordersCount = getOrdersCount();
-        var state = getSelectedState();
+        var orders = this._getOrders();
+        let state = orders['state'], itemsCodes = orders['items'];
         console.log(`----------${state}-----------`);
-        for (var i = 0; i < ordersCount; i++) {
-            var item = getSelectedItem();
+        for (let item of itemsCodes) {
             var result = null;
             if (items[item].type === "PreparedFood") {
                 result = ( 1 + base(state) ) * items[item].price;
@@ -109,10 +117,29 @@ class TaxCalculator {
             }
             console.log(`${item}: $${result.toFixed(2)}`);
         }
+        this._result = result;
         console.log(`----Have a nice day!-----`);
+    }
+
+    _setRandomOrders() {
+        this._state = getSelectedState();
+        this._items = new Array(getOrdersCount()).fill(0).map(() => getSelectedItem());
+    }
+
+    _getOrders(){
+        return {state: this._state, items: this._items};
+    }
+
+    get result() {
+        return this._result;
     }
 }
 
+function calculatePriceFor(state, item) {
+    var calculator = new TaxCalculator(state, [item]);
+    calculator.calculateTax();
+    return calculator.result;
+}
 //############################
 //Production - код:
 production();
@@ -120,14 +147,14 @@ production();
 //############################
 //Тесты:
 var tests = [
-    () => assertEquals(3.0 * (1 + 0.04), calculatePriceFor("Alabama", "eggs")),
+            () => assertEquals(3.0 * (1 + 0.04), calculatePriceFor("Alabama", "eggs")),
     () => assertEquals(0.4 * (1 + 0.015 + 0.065), calculatePriceFor("Arkansas", "coca-cola")),
     () => assertEquals(6.7 * (1 + 0.0), calculatePriceFor("Alaska", "amoxicillin")),
     () => assertEquals(6.7 * (1 + 0.0), calculatePriceFor("California", "amoxicillin")),
     () => assertEquals(2 * (1 + 0.0635), calculatePriceFor("Connecticut", "hamburger")),
 ];
 //Раскомментируйте следующую строчку для запуска тестов:
-//runTests (tests);
+runTests (tests);
 
 //############################
 //Код ниже этой строчки не надо менять для выполнения домашней работы
@@ -166,9 +193,9 @@ function assertEquals (expected, actual) {
 
 function runTests (tests) {
     var failedTests = tests
-        .map((f) => f())
-        .map((code) => {if (code === -1) {return 1} else {return 0}})
-        .reduce((a, b) => a + b, 0);
+            .map((f) => f())
+.map((code) => {if (code === -1) {return 1} else {return 0}})
+.reduce((a, b) => a + b, 0);
 
     if (failedTests === 0) {
         console.log(`Success: ${tests.length} tests pass`);
