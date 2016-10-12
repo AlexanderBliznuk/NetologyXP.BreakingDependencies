@@ -107,15 +107,15 @@ class TaxCalculator {
         var orders = this._getOrders();
         let state = orders['state'], itemsCodes = orders['items'];
         console.log(`----------${state}-----------`);
-        for (let item of itemsCodes) {
+        for (let itemCode of itemsCodes) {
             var result = null;
-            if (items[item].type === "PreparedFood") {
-                result = ( 1 + base(state) ) * items[item].price;
+            if (items[itemCode].type === "PreparedFood") {
+                result = ( 1 + base(state) ) * items[itemCode].price;
             }
             else {
-                result = calc(state, items[item].type) * items[item].price + items[item].price;
+                result = calc(state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
             }
-            console.log(`${item}: $${result.toFixed(2)}`);
+            console.log(`${itemCode}: $${result.toFixed(2)}`);
         }
         this._result = result;
         console.log(`----Have a nice day!-----`);
