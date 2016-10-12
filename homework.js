@@ -47,40 +47,15 @@ var items = {
     "ceasar salad": {price: 4.2, type: "PreparedFood"},
 };
 
-var itemTypeTaxModifiers =
-{
-    "Groceries": {
-        "Alabama" : 0,
-        "Alaska" : 0,
-        "Arizona" : "",
-        "Arkansas" : 0.015,
-        "California" : "",
-        "Colorado" : "",
-        "Connecticut" : ""
-    },
-    "PrescriptionDrug": {
-        "Alabama" : "",
-        "Alaska" : 0,
-        "Arizona" : "",
-        "Arkansas" : "",
-        "California" : "",
-        "Colorado" : "",
-        "Connecticut" : ""
-    }
+var taxes = {
+    "Alabama" : {base: 0.04, Groceries: 0, PrescriptionDrug: ""},
+    "Alaska" : {base: 0, Groceries: 0, PrescriptionDrug: 0},
+    "Arizona" : {base: 0.056, Groceries: "", PrescriptionDrug: ""},
+    "Arkansas" : {base: 0.065, Groceries: 0.015, PrescriptionDrug: ""},
+    "California" : {base: 0.075, Groceries: "", PrescriptionDrug: ""},
+    "Colorado" : {base: 0.029, Groceries: "", PrescriptionDrug: ""},
+    "Connecticut" : {base: 0.0635, Groceries: "", PrescriptionDrug: ""}
 };
-
-function base(state) {
-    var taxes = {
-        "Alabama" : 0.04,
-        "Alaska" : 0,
-        "Arizona" : 0.056,
-        "Arkansas" : 0.065,
-        "California" : 0.075,
-        "Colorado" : 0.029,
-        "Connecticut" : 0.0635
-    };
-    return taxes[state];
-}
 
 class TaxCalculator {
     constructor(state, itemsCodes) {
@@ -97,23 +72,23 @@ class TaxCalculator {
     calculateFinalPrice() {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
-            this.lastResult = this.getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+            this.lastResult = this._getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
 
             console.log(`${itemCode}: $${this.lastResult.toFixed(2)}`);
         }
         console.log(`----Have a nice day!-----`);
     }
 
-     getTax(itemType) {
-        var itemTypeTaxModifier = itemTypeTaxModifiers[itemType];
-        if (itemTypeTaxModifier === undefined) {
-            return base(this.state);
+     _getTax(itemType) {
+        var stateTaxes = taxes[this.state];
+        if (stateTaxes[itemType] === undefined) {
+            return stateTaxes['base'];
         }
 
-        if (itemTypeTaxModifier[this.state] === "") {
+        if (stateTaxes[itemType] === "") {
             return 0;
         }
-        return base(this.state) + itemTypeTaxModifier[this.state];
+        return stateTaxes['base'] + stateTaxes[itemType];
     }
 
     _setRandomOrders() {
@@ -137,6 +112,7 @@ class TaxCalculator {
         return this._result;
     }
 }
+
 
 function calculatePriceFor(state, item) {
     var calculator = new TaxCalculator(state, [item]);
