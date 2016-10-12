@@ -47,16 +47,6 @@ var items = {
     "ceasar salad": {price: 4.2, type: "PreparedFood"},
 };
 
-var taxes = {
-    "Alabama" : {base: 0.04, Groceries: 0, PrescriptionDrug: ""},
-    "Alaska" : {base: 0, Groceries: 0, PrescriptionDrug: 0},
-    "Arizona" : {base: 0.056, Groceries: "", PrescriptionDrug: ""},
-    "Arkansas" : {base: 0.065, Groceries: 0.015, PrescriptionDrug: ""},
-    "California" : {base: 0.075, Groceries: "", PrescriptionDrug: ""},
-    "Colorado" : {base: 0.029, Groceries: "", PrescriptionDrug: ""},
-    "Connecticut" : {base: 0.0635, Groceries: "", PrescriptionDrug: ""}
-};
-
 class TaxCalculator {
     constructor(state, itemsCodes) {
         if (state && itemsCodes && itemsCodes instanceof Array) {
@@ -79,16 +69,16 @@ class TaxCalculator {
         console.log(`----Have a nice day!-----`);
     }
 
-     _getTax(itemType) {
-        var stateTaxes = taxes[this.state];
-        if (stateTaxes[itemType] === undefined) {
+     _getTax(productType) {
+        var stateTaxes = TaxCalculator.taxes[this.state];
+
+        if (stateTaxes[productType] === TaxCalculator.DUTY_FREE) {
+            return 0;
+        } else if (stateTaxes[productType] === undefined) {
             return stateTaxes['base'];
         }
 
-        if (stateTaxes[itemType] === "") {
-            return 0;
-        }
-        return stateTaxes['base'] + stateTaxes[itemType];
+        return stateTaxes['base'] + stateTaxes[productType];
     }
 
     _setRandomOrders() {
@@ -112,6 +102,18 @@ class TaxCalculator {
         return this._result;
     }
 }
+
+TaxCalculator.DUTY_FREE = "duty_free";
+
+TaxCalculator.taxes = {
+    "Alabama" : {base: 0.04, Groceries: 0, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "Alaska" : {base: 0, Groceries: 0, PrescriptionDrug: 0},
+    "Arizona" : {base: 0.056, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "Arkansas" : {base: 0.065, Groceries: 0.015, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "California" : {base: 0.075, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "Colorado" : {base: 0.029, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "Connecticut" : {base: 0.0635, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE}
+};
 
 
 function calculatePriceFor(state, item) {
