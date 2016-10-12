@@ -72,7 +72,7 @@ class TaxCalculator {
     calculateFinalPrice() {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
-            this.lastResult = this._getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+            this.lastResult = (1 + this._getTax(items[itemCode].type)) * items[itemCode].price;
 
             console.log(`${itemCode}: $${this.lastResult.toFixed(2)}`);
         }
