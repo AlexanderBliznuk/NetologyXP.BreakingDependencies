@@ -94,7 +94,7 @@ class TaxCalculator {
 
     // У этой функции нелья менять интерфейс
     // Но можно менять содержимое
-    calculateTax() {
+    calculateFinalPrice() {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
             var result = null;
@@ -138,7 +138,7 @@ class TaxCalculator {
 
 function calculatePriceFor(state, item) {
     var calculator = new TaxCalculator(state, [item]);
-    calculator.calculateTax();
+    calculator.calculateFinalPrice();
     return calculator.result;
 }
 //############################
@@ -162,7 +162,7 @@ runTests (tests);
 
 function production(){
     var calculator = new TaxCalculator();
-    calculator.calculateTax();
+    calculator.calculateFinalPrice();
 }
 
 function getSelectedItem(){
