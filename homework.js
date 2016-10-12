@@ -97,12 +97,10 @@ class TaxCalculator {
     calculateFinalPrice() {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
-            var result = null;
-            result = this.getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+            this.lastResult = this.getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
 
-            console.log(`${itemCode}: $${result.toFixed(2)}`);
+            console.log(`${itemCode}: $${this.lastResult.toFixed(2)}`);
         }
-        this._result = result;
         console.log(`----Have a nice day!-----`);
     }
 
@@ -131,7 +129,11 @@ class TaxCalculator {
         return this._state;
     }
 
-    get result() {
+    set lastResult (result) {
+        this._result = result;
+    }
+
+    get lastResult() {
         return this._result;
     }
 }
@@ -139,7 +141,7 @@ class TaxCalculator {
 function calculatePriceFor(state, item) {
     var calculator = new TaxCalculator(state, [item]);
     calculator.calculateFinalPrice();
-    return calculator.result;
+    return calculator.lastResult;
 }
 //############################
 //Production - код:
