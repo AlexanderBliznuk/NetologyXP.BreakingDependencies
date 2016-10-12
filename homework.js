@@ -92,10 +92,10 @@ function calc(state, itemType) {
 }
 
 class TaxCalculator {
-    constructor(state, items) {
-        if (state && items && items instanceof Array) {
+    constructor(state, itemsCodes) {
+        if (state && itemsCodes && itemsCodes instanceof Array) {
             this._state = state;
-            this._items = items;
+            this._itemsCodes = itemsCodes;
         } else {
             this._setRandomOrders();
         }
@@ -104,16 +104,14 @@ class TaxCalculator {
     // У этой функции нелья менять интерфейс
     // Но можно менять содержимое
     calculateTax() {
-        var orders = this._getOrders();
-        let state = orders['state'], itemsCodes = orders['items'];
-        console.log(`----------${state}-----------`);
-        for (let itemCode of itemsCodes) {
+        console.log(`----------${this.state}-----------`);
+        for (let itemCode of this.itemsCodes) {
             var result = null;
             if (items[itemCode].type === "PreparedFood") {
-                result = ( 1 + base(state) ) * items[itemCode].price;
+                result = ( 1 + base(this.state) ) * items[itemCode].price;
             }
             else {
-                result = calc(state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+                result = calc(this.state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
             }
             console.log(`${itemCode}: $${result.toFixed(2)}`);
         }
@@ -123,11 +121,15 @@ class TaxCalculator {
 
     _setRandomOrders() {
         this._state = getSelectedState();
-        this._items = new Array(getOrdersCount()).fill(0).map(() => getSelectedItem());
+        this._itemsCodes = new Array(getOrdersCount()).fill(0).map(() => getSelectedItem());
     }
 
-    _getOrders(){
-        return {state: this._state, items: this._items};
+    get itemsCodes(){
+        return  this._itemsCodes;
+    }
+
+    get state() {
+        return this._state;
     }
 
     get result() {
