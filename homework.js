@@ -98,7 +98,7 @@ class TaxCalculator {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
             var result = null;
-            result = this.calcTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+            result = this.getTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
 
             console.log(`${itemCode}: $${result.toFixed(2)}`);
         }
@@ -106,7 +106,7 @@ class TaxCalculator {
         console.log(`----Have a nice day!-----`);
     }
 
-     calcTax(itemType) {
+     getTax(itemType) {
         var itemTypeTaxModifier = itemTypeTaxModifiers[itemType];
         if (itemTypeTaxModifier === undefined) {
             return base(this.state);
