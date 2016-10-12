@@ -82,19 +82,6 @@ function base(state) {
     return taxes[state];
 }
 
-function calcTax(state, itemType) {
-
-    var itemTypeTaxModifier = itemTypeTaxModifiers[itemType];
-    if (itemTypeTaxModifier === undefined) {
-        return base(state);
-    }
-
-    if (itemTypeTaxModifier[state] === "") {
-        return 0;
-    }
-    return base(state) + itemTypeTaxModifier[state];
-}
-
 class TaxCalculator {
     constructor(state, itemsCodes) {
         if (state && itemsCodes && itemsCodes instanceof Array) {
@@ -111,12 +98,24 @@ class TaxCalculator {
         console.log(`----------${this.state}-----------`);
         for (let itemCode of this.itemsCodes) {
             var result = null;
-            result = calcTax(this.state, items[itemCode].type) * items[itemCode].price + items[itemCode].price;
+            result = this.calcTax(items[itemCode].type) * items[itemCode].price + items[itemCode].price;
 
             console.log(`${itemCode}: $${result.toFixed(2)}`);
         }
         this._result = result;
         console.log(`----Have a nice day!-----`);
+    }
+
+     calcTax(itemType) {
+        var itemTypeTaxModifier = itemTypeTaxModifiers[itemType];
+        if (itemTypeTaxModifier === undefined) {
+            return base(this.state);
+        }
+
+        if (itemTypeTaxModifier[this.state] === "") {
+            return 0;
+        }
+        return base(this.state) + itemTypeTaxModifier[this.state];
     }
 
     _setRandomOrders() {
