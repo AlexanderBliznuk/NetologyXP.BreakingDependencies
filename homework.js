@@ -114,9 +114,10 @@ TaxCalculator.taxes = {
     "Arkansas" : {base: 0.065, Groceries: 0.015, PrescriptionDrug: TaxCalculator.DUTY_FREE},
     "California" : {base: 0.075, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
     "Colorado" : {base: 0.029, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
-    "Connecticut" : {base: 0.0635, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE}
+    "Connecticut" : {base: 0.0635, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE},
+    "Tennessee": {base: 0.07, Groceries: 0.05},
+    "Texas": {base: 0.0625, Groceries: TaxCalculator.DUTY_FREE, PrescriptionDrug: TaxCalculator.DUTY_FREE}
 };
-
 
 function calculatePriceFor(state, item) {
     var calculator = new TaxCalculator(state, [item]);
