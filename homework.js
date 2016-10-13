@@ -70,20 +70,22 @@ class TaxCalculator {
     }
 
      _getTax(productType) {
-        var stateTaxes = TaxCalculator.taxes[this.state];
-
-        if (stateTaxes[productType] === TaxCalculator.DUTY_FREE) {
+         if (this.taxes4State[productType] === TaxCalculator.DUTY_FREE) {
             return 0;
-        } else if (stateTaxes[productType] === undefined) {
-            return stateTaxes['base'];
+        } else if (this.taxes4State[productType] === undefined) {
+            return this.taxes4State['base'];
         }
 
-        return stateTaxes['base'] + stateTaxes[productType];
+        return this.taxes4State['base'] + this.taxes4State[productType];
     }
 
     _setRandomOrders() {
         this._state = getSelectedState();
         this._itemsCodes = new Array(getOrdersCount()).fill(0).map(() => getSelectedItem());
+    }
+
+     get taxes4State() {
+        return TaxCalculator.taxes[this.state];
     }
 
     get itemsCodes(){
