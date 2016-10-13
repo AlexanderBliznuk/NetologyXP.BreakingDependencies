@@ -148,13 +148,13 @@ function production(){
 }
 
 function getSelectedItem(){
-    var items = ["milk", "eggs", "coca-cola", "amoxicillin", "aspirin", "marijuana", "hamburger", "ceasar salad"];
-    return items[Math.floor(Math.random() * items.length)];
+    var itemsCodes = Object.keys(items);
+    return itemsCodes[Math.floor(Math.random() * itemsCodes.length)];
 }
 
 function getSelectedState(){
-    var state = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut"];
-    return state[Math.floor(Math.random() * state.length)];
+    var states = Object.keys(TaxCalculator.taxes);
+    return states[Math.floor(Math.random() * states.length)];
 }
 
 function getOrdersCount(){
